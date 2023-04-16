@@ -1,0 +1,101 @@
+#include<stdio.h>
+#include<math.h>
+void accompany(int r,double arr[r][r])
+{
+	double ac_arr[r][r];//伴随矩阵按行求按列放
+	for(int i=0;i<r;i++)
+	{
+		for(int j=0;j<r;j++)
+		{
+			double A[r-1][r-1];
+			for(int m=0,g=0;m<r;m++)//arr的余子式A
+			{
+				if(m==i)
+				{
+					continue;
+				}
+				g++;
+				for(int n=0,l=0;n<r;n++)
+				{
+					if(n==j)
+					{
+						continue;
+					}
+					l++;
+					A[g][l]=arr[m][n];
+				}
+			}
+			ac_arr[i][j]=det(r-1,A)*pow(-1,i+j+2);
+		}
+	}
+}
+
+double det(int r,double A[r][r])//行列式的值
+{
+	int i, j, k, l;
+	double result = 1, temp;
+	// 高斯消元
+	for(i=0; i<r-1; i++)
+	{
+		// 如果第i列第i个元素为0，则交换行
+		if(A[i][i] == 0)
+		{
+			for(j=i+1; j<r; j++)
+			{
+				if(A[j][i] != 0)
+				{
+					for(k=0; k<r; k++)
+					{
+						temp = A[i][k];
+						A[i][k] = A[j][k];
+						A[j][k] = temp;
+					}
+					result *= -1;
+					break;
+				}
+			}
+		}
+		// 如果第i列第i个元素不为0，则将第i+1~n-1行进行消元
+		if(A[i][i] != 0)
+		{
+			for(j=i+1; j<r; j++)
+			{
+				temp = A[j][i] / A[i][i];
+				for(k=i; k<r; k++)
+				{
+					A[j][k] -= temp * A[i][k];
+				}
+			}
+		}
+	}
+	// 计算行列式的值
+	for(i=0; i<r; i++)
+	{
+		result *= A[i][i];
+	}
+	return result;
+}
+int main()
+{
+	printf("请输入矩阵的阶数(阶数大于等于3）:\n");
+	int r;
+	scanf("%d",&r);
+	if(r<3)
+	{
+		printf("输入有误");
+	}
+	else 
+	{
+		double arr[r][r];
+		printf("请对矩阵进行赋值:\n");
+		for(int i=0;i<r;i++)
+		{
+			for(int j=0;j<r;j++)
+			{
+				scanf("%lf",&arr[r][r]);
+			}
+		}
+		accompany(r,arr);
+	}
+	return 0;
+}
